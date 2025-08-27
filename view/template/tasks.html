@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Tarefas</title>
+</head>
+<body>
+    <h1>Minhas Tarefas</h1>
+
+    <ul>
+        {% for task in tasks %}
+        <li>{{task.title}} - {{task.description}} - {{task.status}} - {{task.user_id}} | <a href="">Concluir</a>  | <a href="">Excluir</a></li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('create_task') }}">Create Task</a>
+</body>
+</html>
