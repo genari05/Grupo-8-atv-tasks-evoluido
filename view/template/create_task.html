@@ -4,27 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Task</title>
+    <title>Criar Tarefa</title>
 </head>
 
 <body>
-    <h1>Create Task</h1>
+    <h1>Criar Tarefa</h1>
 
     <form method="POST">
-        <label for="title">Title</label>
+        <label for="title">Título</label>
         <input type="text" name="title" id="title" required>
-
         <br />
 
         <label for="description">Descrição</label>
-        <input type="text" name="description" id="description" required>
-
+        <textarea name="description" id="description" rows="4" cols="40" required></textarea>
         <br />
 
-        <label for="">Usuário</label>
-        <select name="" id=""></select>
-
+        <label for="user_id">Usuário</label><br>
+        <select name="user_id" id="user_id" required>
+            <option value="">Selecione um usuário</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.name }}</option>
+            {% endfor %}
+        </select>
         <br />
+
         <button type="submit">Create</button>
     </form>
 </body>
