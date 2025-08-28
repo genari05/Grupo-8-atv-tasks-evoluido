@@ -11,6 +11,7 @@ class Task(db.Model):
 
     # chave estrangeira -> users.id
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('tasks', lazy=True))
 
     def __repr__(self):
         return f"<Task {self.title} - {self.status}>"

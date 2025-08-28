@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Tarefas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+
+<body>
+    <div id="Container">
+        <h1>Minhas Tarefas</h1>
+
+        <a href="{{ url_for('index') }}">Usuários</a>
+        <a href="{{ url_for('create_task') }}">Nova Tarefa</a>
+        <br />
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descrição</th>
+                    <th>Status</th>
+                    <th>Usuário</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>{{ task.user.name }}</td>
+                    <td class="acoes">
+                        <form action="{{ url_for('update_task_status', task_id=task.id) }}" method="POST">
+                            <button id="status" type="submit">
+                                {% if task.status == 'Pendente' %}Concluir{% else %}Reabrir{% endif %}
+                            </button>
+                        </form>
+                        <form action="{{ url_for('delete_task', task_id=task.id) }}" method="POST"
+                            onsubmit="return confirm('Tem certeza que deseja excluir esta tarefa?')">
+                            <button id="excluir" type="submit">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">Nenhuma tarefa encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
