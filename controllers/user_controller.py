@@ -1,11 +1,14 @@
-from flask import render_template, request, redirect, url_for
+from flask import jsonify, request
 from models.user import User, db
 
 class UserController:
     @staticmethod
     def index():
         users = User.query.all()
-        return render_template('index.html', users=users)
+        if users:
+            return jsonify([user.dici() for user in users]), 200
+        else:
+            return jsonify({'mensagem': 'User não encontrado'}), 404
 
     @staticmethod
     def contact():
@@ -13,12 +16,7 @@ class UserController:
             name = request.form['name']
             email = request.form['email']
 
-            # validações simples: se usuário já existe no db, etc
-
             new_user = User(name=name, email=email)
             db.session.add(new_user)
             db.session.commit()
-
-            return redirect(url_for('index'))
-
-        return render_template('contact.html')
+            return jsonify(new_user.dici()), 201

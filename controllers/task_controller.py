@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import jsonify, request
 from models.task import Task, db
 from models.user import User
 
@@ -6,9 +6,11 @@ class TaskController:
 
     @staticmethod
     def list_tasks():
-        # Busca todas as tarefas e já permite acessar o nome do usuário pelo relacionamento
         tasks = Task.query.all()
-        return render_template("tasks.html", tasks=tasks)
+        if tasks:
+            return jsonify([task.dici() for task in tasks]), 200
+        else:
+            return jsonify({'mensagem': 'Tarefa não encontrada'}), 404
 
     @staticmethod
     def create_task():
@@ -17,26 +19,21 @@ class TaskController:
             description = request.form["description"]
             user_id = request.form["user_id"]
 
-            # Cria nova tarefa
             new_task = Task(title=title, description=description, user_id=user_id)
             db.session.add(new_task)
             db.session.commit()
 
-            return redirect(url_for("task_list"))
-
-        # GET → mostra o formulário
-        users = User.query.all()
-        return render_template("create_task.html", users=users)
+            return jsonify(new_task), 201
 
     @staticmethod
     def update_task_status(task_id):
         task = Task.query.get(task_id)
         if task:
-            # alterna entre Pendente e Concluído
             task.status = "Concluído" if task.status == "Pendente" else "Pendente"
             db.session.commit()
 
-        return redirect(url_for("task_list"))
+            return jsonify(task), 201
+        return jsonify({'mensagem': 'Tarefa não encontrada'}), 404  
 
     @staticmethod
     def delete_task(task_id):
@@ -45,4 +42,5 @@ class TaskController:
             db.session.delete(task)
             db.session.commit()
 
-        return redirect(url_for("task_list"))
+            return jsonify({'mensagem': 'Tarefa deletada'}), 200
+        return jsonify({'mensagem': 'Tarefa não encontrada'}), 404
