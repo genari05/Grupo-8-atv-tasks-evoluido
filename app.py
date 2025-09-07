@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flasgger import Swagger
 from config import Config # importa as 
 from controllers.user_controller import UserController
 from controllers.task_controller import TaskController
@@ -12,6 +13,33 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+swagger_config = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": 'apispec',
+            "route": '/apispec.json',
+            "rule_filter": lambda rule: True,
+            "model_filter": lambda tag: True,
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/docs/"
+}
+
+swagger_template = {
+    "info": {
+        "title": "API de Tarefas",
+        "description": "Documentação da API de Tarefas e Usuários com Swagger UI (Flasgger).",
+        "version": "1.0.0"
+    },
+    "basePath": "/",  # base da API
+    "schemes": ["http", "https"]
+}
+
+swagger = Swagger(app, config=swagger_config, template=swagger_template)
 
 app.add_url_rule('/', 'index',  UserController.index)
 app.add_url_rule('/contact', 'contact', UserController.contact, methods=['POST'])
