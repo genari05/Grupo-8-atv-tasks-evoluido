@@ -75,7 +75,7 @@ class TaskController:
             db.session.add(new_task)
             db.session.commit()
 
-            return jsonify(new_task), 201
+            return jsonify(new_task.dici()), 201
 
     @staticmethod
     def update_task_status(task_id):
@@ -101,7 +101,7 @@ class TaskController:
             task.status = "Concluído" if task.status == "Pendente" else "Pendente"
             db.session.commit()
 
-            return jsonify(task), 201
+            return jsonify(task.dici()), 201
         return jsonify({'mensagem': 'Tarefa não encontrada'}), 404  
 
     @staticmethod
