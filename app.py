@@ -29,4 +29,4 @@ app.add_url_rule('/tasks/update/<int:task_id>', 'update_task_status', TaskContro
 app.add_url_rule('/tasks/delete/<int:task_id>', 'delete_task', TaskController.delete_task, methods=['DELETE'])
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5002)
+    app.run(debug=True, host='0.0.0.0', port=5002)
